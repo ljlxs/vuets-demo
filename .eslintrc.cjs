@@ -10,7 +10,6 @@ module.exports = {
     '@vue/eslint-config-prettier/skip-formatting'
   ],
   rules: {
-    'eslint-plugin-vue': 0,
     'prettier/prettier': [
       'warn',
       {
@@ -27,7 +26,7 @@ module.exports = {
         ignores: ['index']
       }
     ],
-    'vue/no-setup-props-destructure': ['off'],
+    'vue/no-setup-props-destructure': ['off']
   },
   parserOptions: {
     ecmaVersion: 'latest'

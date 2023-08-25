@@ -1,6 +1,8 @@
 // 公共样式
-import './styles/main.scss'
 import 'vant/lib/index.css'
+import './styles/main.scss'
+import 'virtual:svg-icons-register'
+
 import { createApp } from 'vue'
 import pinia from './stores'
 
