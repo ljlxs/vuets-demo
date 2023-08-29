@@ -2,15 +2,21 @@
 import { useRouter } from 'vue-router'
 const router = useRouter()
 // import { defineProps } from 'vue'
-const props = defineProps({
-  title: String,
-  rightText: String
-})
-const emit = defineEmits(['click-right'])
+const props = defineProps<{
+  title?: string
+  rightText?: string
+  bock: () => void
+}>()
+const emit = defineEmits<{
+  (e: 'click-right'): void
+}>()
 const onClickRight = () => {
   emit('click-right')
 }
 const onClickLeft = () => {
+  if (props.bock) {
+    return props.bock()
+  }
   if (history.state?.back) {
     router.back()
   } else {
@@ -22,7 +28,7 @@ const onClickLeft = () => {
 <template>
   <div>
     <van-nav-bar
-      :right-text="props.rightText"
+      :right-text="rightText"
       :title="title"
       left-arrow
       fixed
@@ -39,6 +45,11 @@ const onClickLeft = () => {
       color: var(--cp-text1);
     }
     .van-nav-bar__title {
+      font-size: 15px;
+      color: var(--cp-primary);
+      font-weight: 500;
+    }
+    .van-nav-bar__text {
       font-size: 15px;
       color: var(--cp-primary);
       font-weight: 500;

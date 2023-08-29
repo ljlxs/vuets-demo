@@ -26,6 +26,7 @@ module.exports = {
         ignores: ['index']
       }
     ],
+    'vue/no-v-model-argument': 'off',
     'vue/no-setup-props-destructure': ['off']
   },
   parserOptions: {
