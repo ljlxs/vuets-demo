@@ -50,7 +50,7 @@ const onSubmit = async () => {
   }
 }
 const time = ref(0)
-let timeId: number = 0
+let timeId = 0
 
 // 发送验证码
 const codeClisk = async () => {

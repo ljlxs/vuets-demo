@@ -23,6 +23,7 @@ const onClickLeft = () => {
   <div>
     <van-nav-bar
       :right-text="props.rightText"
+      :title="title"
       left-arrow
       fixed
       @click-left="onClickLeft"
@@ -30,16 +31,17 @@ const onClickLeft = () => {
     />
   </div>
 </template>
-<style scoped lang="scss">
+<style lang="scss" scoped>
 ::v-deep() {
   .van-nav-bar {
     &__arrow {
       font-size: 18px;
       color: var(--cp-text1);
     }
-    &__text {
+    .van-nav-bar__title {
       font-size: 15px;
       color: var(--cp-primary);
+      font-weight: 500;
     }
   }
 }

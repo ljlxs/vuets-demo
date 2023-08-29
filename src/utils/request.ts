@@ -24,6 +24,11 @@ instance.interceptors.request.use(
 //响应拦截
 instance.interceptors.response.use(
   (res: AxiosResponse) => {
+    // console.log(res.headers.getAuthorization)
+    // if (res.headers.authorization) {
+    //   const token = res.headers.authorization.replace('Bearer ', '')
+    //   console.log(token)
+    // }
     if (res.data.code !== 10000) {
       showToast(res.data.message)
       return Promise.reject(res.data)
