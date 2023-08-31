@@ -3,7 +3,3 @@ export type KnowledgeParams = {
   current: number
   pageSize: number
 }
-export type KnowPageDocParams = {
-  current: number
-  pageSize: number
-}

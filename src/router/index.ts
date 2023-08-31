@@ -5,7 +5,7 @@ const router = createRouter({
     {
       path: '/login',
       name: 'login',
-      component: () => import('../views/Login/index.vue')
+      component: () => import('../views/Login/indexCopy.vue')
     },
     {
       path: '/register',
@@ -22,6 +22,18 @@ const router = createRouter({
       name: 'patient',
       component: () => import('../views/User/patient.vue'),
       meta: { title: '家庭档案' }
+    },
+    {
+      path: '/consult/fast',
+      name: 'fast',
+      component: () => import('../views/Consult/ConsultFast.vue'),
+      meta: { title: '极速问诊' }
+    },
+    {
+      path: '/consult/dep',
+      name: 'dep',
+      component: () => import('../views/Consult/ConsultDep.vue'),
+      meta: { title: '选择科室' }
     },
     {
       path: '/',

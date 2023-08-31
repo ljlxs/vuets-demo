@@ -5,7 +5,7 @@ const router = useRouter()
 const props = defineProps<{
   title?: string
   rightText?: string
-  bock: () => void
+  bock?: () => void
 }>()
 const emit = defineEmits<{
   (e: 'click-right'): void
@@ -46,7 +46,7 @@ const onClickLeft = () => {
     }
     .van-nav-bar__title {
       font-size: 15px;
-      color: var(--cp-primary);
+      color: var(--cp-text1);
       font-weight: 500;
     }
     .van-nav-bar__text {

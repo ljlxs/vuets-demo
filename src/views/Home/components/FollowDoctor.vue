@@ -1,5 +1,32 @@
-<script setup lang="ts">
+<script lang="ts" setup>
+import { ref, onMounted, onUnmounted } from 'vue'
 import DoctorCard from './DoctorCard.vue'
+import { getPageDoc } from '../../../services/consult'
+import type { PageParams, DoctorList } from '@/types/consult'
+import { useWindowSize } from '@vueuse/core'
+const pageParams = ref<PageParams>({
+  current: 1,
+  pageSize: 5
+})
+const doctorList = ref<DoctorList>()
+const getPageDocList = async () => {
+  const res = await getPageDoc(pageParams.value)
+  doctorList.value = res.data.rows
+}
+getPageDocList()
+const widthValue = ref(0)
+const setWidth = () => {
+  const { width } = useWindowSize()
+  widthValue.value = (150 / 375) * width.value
+}
+onMounted(() => {
+  setWidth()
+  window.addEventListener('resize', setWidth)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('resize', setWidth)
+})
 </script>
 <template>
   <div class="follow-foctor-page">
@@ -8,9 +35,9 @@ import DoctorCard from './DoctorCard.vue'
       <p class="look">查看更多<i class="van-icon van-icon-arrow" /></p>
     </div>
     <div class="follow-foctor-page-header-body">
-      <van-swipe :width="150" :show-indicators="false" :loop="false">
-        <van-swipe-item>
-          <DoctorCard></DoctorCard>
+      <van-swipe :width="widthValue" :show-indicators="false" :loop="false">
+        <van-swipe-item v-for="(item, index) in doctorList" :key="index">
+          <DoctorCard :item="item"></DoctorCard>
         </van-swipe-item>
       </van-swipe>
     </div>
