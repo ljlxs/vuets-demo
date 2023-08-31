@@ -34,5 +34,5 @@ export type KnowledgeList = Knowledge[]
 export type KnowledgePage = {
   pageTotal: number // 总页数
   total: number // 总条数
-  rows: number //数据
+  rows: array //数据
 }

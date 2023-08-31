@@ -3,11 +3,7 @@ import { ref } from 'vue'
 import KnowledgeCard from './KnowledgeCard.vue'
 import { getUserInfo } from '../../../services/consult'
 import type { KnowledgeParams } from '@/services/types/consult'
-import type {
-  KnowledgeList,
-  KnowledgeType,
-  KnowledgePage
-} from '@/types/consult'
+import type { KnowledgeList, KnowledgeType } from '@/types/consult'
 
 const props = defineProps<{
   type: KnowledgeType
