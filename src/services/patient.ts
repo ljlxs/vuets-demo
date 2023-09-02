@@ -1,8 +1,8 @@
 import request from '@/utils/request'
-import type { PatientType } from '@/types/user'
+import type { PatientList, PatientType } from '@/types/user'
 // 查询患者
 export const getPatientList = () => {
-  return request<PatientType>('/patient/mylist', 'get')
+  return request<PatientList>('/patient/mylist', 'get')
 }
 // 添加患者
 export const addPatient = (data: PatientType) => {

@@ -33,7 +33,7 @@ const store = useConsultStore()
           <router-link
             to="/consult/fast"
             class="nav"
-            @click="store.setType(ConsultType.Medication)"
+            @click="store.setType(ConsultType.Fast)"
           >
             <cp-icon name="home-graphic"></cp-icon>
             <p class="title">极速问诊</p>

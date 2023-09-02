@@ -5,17 +5,34 @@ import {
   addPatient,
   updatePatient,
   delPatient
-} from '../../services/patient'
-import type { PatientType } from '../../types/user.d'
+} from '@/services/patient'
+import type { PatientList, PatientType } from '@/types/user.d'
 import { showToast } from 'vant'
 import Validator from 'id-validator'
 import { showConfirmDialog } from 'vant'
-let DataList = ref()
-const PatientList = async () => {
+import { useRoute } from 'vue-router'
+import { useConsultStore } from '@/stores/consult'
+import router from '@/router'
+const route = useRoute()
+const store = useConsultStore()
+const isChange = computed(() => {
+  return route.query.isChange
+})
+const DataList = ref<PatientList>()
+const tientList = async () => {
   const res = await getPatientList()
   DataList.value = res.data
+
+  if (isChange.value && DataList.value.length) {
+    const defPatient = DataList.value.find((item) => item.defaultFlag === 1)
+    if (defPatient) {
+      itemId.value = defPatient.id as string
+    } else {
+      itemId.value = DataList.value[0].id as string
+    }
+  }
 }
-PatientList()
+tientList()
 const show = ref(false)
 const add = () => {
   show.value = true
@@ -59,7 +76,7 @@ const submit = async () => {
     : await addPatient(patient.value)
   console.log(patient.value.id)
   showToast(patient.value.id ? '编辑成功' : '添加成功')
-  PatientList()
+  tientList()
   show.value = false
 }
 const defaultFlag = computed({
@@ -79,17 +96,34 @@ const remove = async () => {
     })
     await delPatient(patient.value.id)
     show.value = false
-    PatientList()
+    tientList()
     showToast('删除成功')
   }
+}
+const itemId = ref<string>('')
+const cssBor = (val: PatientType) => {
+  if (isChange.value) {
+    itemId.value = val.id as string
+  }
+}
+const next = () => {
+  if (!itemId.value) return showToast('请选就诊择患者')
+  store.setPatientId(itemId.value)
+  router.push('/consult/pay')
 }
 </script>
 
 <template>
   <div class="patient-page">
-    <cp-nav-bar title="家庭档案"></cp-nav-bar>
+    <cp-nav-bar :title="isChange ? '选择患者' : '家庭档案'"></cp-nav-bar>
+    <div v-if="isChange" class="information">
+      <h3>请选择患者信息</h3>
+      <p>以便医生给出更准确的治疗，信息仅医生可见</p>
+    </div>
     <div
       class="patient-page-list"
+      @click="cssBor(item)"
+      :class="{ selected: item.id === itemId }"
       v-for="(item, index) in DataList"
       :key="index"
     >
@@ -155,11 +189,25 @@ const remove = async () => {
         <van-action-bar-button @click="remove">删除</van-action-bar-button>
       </van-action-bar>
     </van-popup>
+    <!-- 底部按钮 -->
+    <div v-if="isChange" class="bomBtn">
+      <van-button @click="next" round type="primary">下一步</van-button>
+    </div>
   </div>
 </template>
 <style lang="scss" scoped>
 .patient-page {
   padding: 46px 0 80px;
+  .information {
+    padding: 15px;
+    > h3 {
+      font-weight: normal;
+      margin-bottom: 5px;
+    }
+    > p {
+      color: var(--cp-text3);
+    }
+  }
   &-list {
     display: flex;
     margin: 15px;
@@ -167,6 +215,11 @@ const remove = async () => {
     background: var(--cp-bg);
     border-radius: 5px;
     justify-content: space-between;
+    border: 1px solid var(--cp-bg);
+    &.selected {
+      border-color: var(--cp-primary);
+      background-color: var(--cp-plain);
+    }
     .list-left {
       width: 90%;
       .left-top {
@@ -218,6 +271,27 @@ const remove = async () => {
       .cp-icon {
         font-size: 24px;
       }
+    }
+  }
+  .bomBtn {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 0 15px;
+    margin-top: 20px;
+    box-sizing: border-box;
+    background: #fff;
+    .van-button {
+      font-size: 16px;
+      margin-top: 13px;
+      width: 100%;
+    }
+    .disabled {
+      opacity: 1;
+      background: #fafafa;
+      color: #d9dbde;
+      border: #fafafa;
     }
   }
   .bomm {

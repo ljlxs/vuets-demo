@@ -96,7 +96,7 @@ export type LikeParams = {
 }
 export type FollowType = 'topic' | 'knowledge' | 'doc' | 'disease'
 // 图片病例信息
-type Image = {
+export type Image = {
   id: string
   url: string
 }
@@ -127,3 +127,39 @@ export type Consult = {
 // 问诊记录变成可选 Partial 将定义的必填类型转化为可选类型
 // Required 转换为全部必须   Partial 转换问全部可选  两个内置的泛型类型
 export type PartialConsult = Partial<Consult>
+export type FormConsult = Pick<
+  PartialConsult,
+  'illnessDesc' | 'illnessTime' | 'consultFlag' | 'pictures'
+>
+// 科室
+export type SubDep = {
+  // 科室ID
+  id: string
+  // 科室名称
+  name: string
+}
+export type TopDep = SubDep & {
+  child: SubDep
+}
+export type DepList = TopDep[]
+
+// 支付传参类型
+export type ConsultOrderPreParams = Pick<PartialConsult, 'type' | 'illnessType'>
+
+// 获取预支付信息返回类型
+export type ConsultOrderPreData = {
+  // 1问医生2极速问诊2开药问诊--默认是1
+  type?: number
+  // 极速问诊类型：0普通1三甲,极速问题必须有值
+  illnessType?: number
+  // 应付款/价格-图文或者极速的费用，极速普通10元，三甲39元
+  payment: number
+  // 积分可抵扣
+  pointDeduction: number
+  // 优惠券抵扣
+  couponDeduction: number
+  // 使用的优惠券id-使用优惠券时，返回
+  couponId?: string
+  // 实付金额
+  actualPayment: number
+}

@@ -10,6 +10,7 @@ export const useConsultStore = defineStore(
     const consult = ref<PartialConsult>({})
     // 设置问诊类型
     const setType = (type: ConsultType) => {
+      console.log(123)
       consult.value.type = type
     }
     // 设置极速问诊类型

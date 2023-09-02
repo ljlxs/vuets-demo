@@ -1,22 +1,40 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { getAllDep } from '@/services/consult'
+import type { DepList } from '@/types/consult'
+import { ref, computed } from 'vue'
+import { useConsultStore } from '@/stores/consult'
+const store = useConsultStore()
 const active = ref(0)
+const list = ref<DepList>([])
+const getAllDepList = async () => {
+  const res = await getAllDep()
+  list.value = res.data
+}
+getAllDepList()
+const childList = computed(() => {
+  return list.value[active.value]?.child
+})
 </script>
 <template>
   <div class="consult-dep-page">
     <cp-nav-bar title="选择科室"></cp-nav-bar>
     <div class="left">
       <van-sidebar v-model="active">
-        <van-sidebar-item title="内科" />
-        <van-sidebar-item title="外科" />
-        <van-sidebar-item title="皮肤科" />
-        <van-sidebar-item title="骨科" />
+        <van-sidebar-item
+          v-for="(item, index) in list"
+          :key="index"
+          :title="item.name"
+        />
       </van-sidebar>
     </div>
     <div class="right">
-      <router-link to="/consult/illness">科室一</router-link>
-      <router-link to="/consult/illness">科室二</router-link>
-      <router-link to="/consult/illness">科室三</router-link>
+      <router-link
+        @click="store.setDepId(ele.id)"
+        v-for="(ele, i) in childList"
+        :key="i"
+        to="/consult/illness"
+        >{{ ele.name }}</router-link
+      >
     </div>
   </div>
 </template>
@@ -26,6 +44,10 @@ const active = ref(0)
   height: calc(100vh - 46px);
   overflow: hidden;
   display: flex;
+  .left {
+    height: 100%;
+    overflow-y: auto;
+  }
   .right {
     flex: 1;
     height: 100%;
