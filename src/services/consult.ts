@@ -8,7 +8,10 @@ import type {
   DepList,
   Image,
   ConsultOrderPreParams,
-  ConsultOrderPreData
+  ConsultOrderPreData,
+  PartialConsult,
+  ConsultOrderListParams,
+  ConsultOrderPage
 } from '@/types/consult'
 import type { PatientType } from '@/types/user'
 // 首页关注
@@ -44,4 +47,28 @@ export const getConsultOrderPre = (OrderPreParams: ConsultOrderPreParams) => {
 // 获取患者信息
 export const getPatientInfo = (id: string) => {
   return request<PatientType>(`/patient/info/${id}`, 'GET')
+}
+// 生成订单
+export const createConsultOrder = (data: PartialConsult) => {
+  return request<{ id: string }>('/patient/consult/order', 'post', data)
+}
+// 发起支付
+export const getConsultOrderPayUrl = (data: {
+  paymentMethod: 0 | 1
+  orderId: string
+  payCallback: string
+}) => {
+  return request<{ payUrl: string }>('/patient/consult/pay', 'post', data)
+}
+// 生成订单
+export const getConsultOrderList = (data: ConsultOrderListParams) => {
+  return request<ConsultOrderPage>('/patient/consult/order/list', 'GET', data)
+}
+// 删除订单
+export const deleteOrder = (id: string | number) => {
+  return request(`/patient/order/${id}`, 'DELETE')
+}
+// 取消订单
+export const cancelOrder = (id: string | number) => {
+  return request(`/patient/order/cancel/${id}`, 'put')
 }

@@ -9,6 +9,7 @@ import { uploadImage } from '@/services/consult'
 import { showConfirmDialog, showToast } from 'vant'
 import { useConsultStore } from '@/stores/consult'
 import { useRouter } from 'vue-router'
+import { IllnessTime, ConsultFlag } from '@/enum'
 const store = useConsultStore()
 const router = useRouter()
 onMounted(async () => {
@@ -27,14 +28,15 @@ onMounted(async () => {
 // 保存的是上传的图片
 const fileList = ref<Image[]>([])
 const timeOptions = [
-  { label: '一周内', value: 0 },
-  { label: '一月内', value: 1 },
-  { label: '半年内', value: 3 },
-  { label: '大于半年', value: 4 }
+  { label: '一周内', value: IllnessTime.Week },
+  { label: '一月内', value: IllnessTime.Month },
+  { label: '半年内', value: IllnessTime.HalfYear },
+  { label: '大于半年', value: IllnessTime.More }
 ]
+
 const flagOptions = [
-  { label: '就诊过', value: 0 },
-  { label: '没就诊过', value: 1 }
+  { label: '就诊过', value: ConsultFlag.isFlag },
+  { label: '没就诊过', value: ConsultFlag.noFlag }
 ]
 const form = ref<FormConsult>({
   illnessDesc: '',
@@ -177,7 +179,6 @@ const next = () => {
         display: flex;
         ::v-deep() {
           .cp-icon {
-            margin-top: 2px;
             font-size: 12px;
             margin-right: 2px;
           }

@@ -144,7 +144,6 @@ const store = useConsultStore()
           .cp-icon {
             font-size: 16px;
             margin-right: 5px;
-            margin-top: 3px;
           }
         }
       }

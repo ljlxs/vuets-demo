@@ -198,7 +198,6 @@ const retreat = async () => {
       .cp-icon {
         font-size: 17px;
         margin-right: 10px;
-        margin-top: 6px;
       }
     }
   }
