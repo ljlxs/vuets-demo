@@ -11,7 +11,8 @@ import type {
   ConsultOrderPreData,
   PartialConsult,
   ConsultOrderListParams,
-  ConsultOrderPage
+  ConsultOrderPage,
+  ConsultOrderItem
 } from '@/types/consult'
 import type { PatientType } from '@/types/user'
 // 首页关注
@@ -71,4 +72,17 @@ export const deleteOrder = (id: string | number) => {
 // 取消订单
 export const cancelOrder = (id: string | number) => {
   return request(`/patient/order/cancel/${id}`, 'put')
+}
+// 查看订单
+export const getPrescriptionPic = (id: string | number) => {
+  return request<{ id: string; url: string }>(
+    `patient/consult/prescription/${id}`,
+    'get'
+  )
+}
+// 问诊详情
+export const getOrderDetail = (orderId: string) => {
+  return request<ConsultOrderItem>('/patient/consult/order/detail', 'get', {
+    orderId
+  })
 }

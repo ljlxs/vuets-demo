@@ -5,8 +5,9 @@ import { useConsultStore } from '@/stores/consult'
 import type { ConsultOrderPreData } from '@/types/consult'
 import type { PatientType } from '@/types/user.d'
 import { showConfirmDialog, showToast } from 'vant'
-import { createConsultOrder, getConsultOrderPayUrl } from '@/services/consult'
+import { createConsultOrder } from '@/services/consult'
 import { useRouter } from 'vue-router'
+import cpPaySheet from '@/components/cp-pay-sheet.vue'
 const store = useConsultStore()
 const router = useRouter()
 const agree = ref(false)
@@ -31,7 +32,7 @@ initPatientInfo()
 const show = ref(false)
 const orderId = ref('')
 // 支付方式：0:微信支付，1:支付宝支付
-const paymentMethod = ref()
+// const paymentMethod = ref()
 // 立即支付:弹出支付方式
 const onPayment = async () => {
   if (!agree.value) return showToast('请勾选我同意')
@@ -42,15 +43,15 @@ const onPayment = async () => {
 }
 
 // 立即支付:支付金额
-const handlePay = async () => {
-  if (paymentMethod.value == undefined) return showToast('请选择支付方式')
-  const res = await getConsultOrderPayUrl({
-    paymentMethod: paymentMethod.value,
-    orderId: orderId.value,
-    payCallback: 'http://localhost:5173/#/room'
-  })
-  window.location.href = res.data.payUrl
-}
+// const handlePay = async () => {
+//   if (paymentMethod.value == undefined) return showToast('请选择支付方式')
+//   const res = await getConsultOrderPayUrl({
+//     paymentMethod: paymentMethod.value,
+//     orderId: orderId.value,
+//     payCallback: 'http://localhost:5173/#/room'
+//   })
+//   window.location.href = res.data.payUrl
+// }
 const beforeClose = () => {
   return showConfirmDialog({
     title: '关闭支付',
@@ -140,7 +141,13 @@ onMounted(() => {
         >我已同意 <span class="text">支付协议</span></van-checkbox
       >
     </div>
-    <van-action-sheet
+    <cpPaySheet
+      v-model:show="show"
+      :onClose="beforeClose"
+      :orderId="orderId"
+      :actualPayment="OrderPreList?.actualPayment!"
+    ></cpPaySheet>
+    <!-- <van-action-sheet
       :beforeClose="beforeClose"
       v-model:show="show"
       title="选择支付方式"
@@ -154,8 +161,8 @@ onMounted(() => {
             <template #icon>
               <cp-icon name="consult-wechat"></cp-icon>
             </template>
-            <!-- extra:自定义单元格最右侧的额外内容 -->
-            <template #extra>
+            //extra:自定义单元格最右侧的额外内容
+              <template #extra>
               <van-checkbox :checked="paymentMethod === 0"></van-checkbox>
             </template>
           </van-cell>
@@ -174,7 +181,7 @@ onMounted(() => {
           >
         </div>
       </div>
-    </van-action-sheet>
+    </van-action-sheet> -->
   </div>
   <div v-else class="consult-pay-page">
     <van-skeleton title :row="3" />

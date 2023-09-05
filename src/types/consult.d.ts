@@ -174,6 +174,12 @@ export type ConsultOrderPage = {
   rows: ConsultOrderItem[]
 }
 export type ConsultOrderItem = {
+  //实付款
+  actualPayment: number
+  //积分抵扣
+  pointDeduction?: string
+  //优惠卷
+  couponDeduction?: string
   /**
    * 开药门诊必有-过敏史0无1有2不清楚
    */

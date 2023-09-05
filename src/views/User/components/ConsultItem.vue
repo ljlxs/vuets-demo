@@ -4,31 +4,44 @@ import { OrderType } from '@/enum'
 import { ref, computed } from 'vue'
 import { deleteOrder, cancelOrder } from '@/services/consult'
 import { showToast } from 'vant'
-
+import useShowPrescription, { useDeleteOrder } from '@/composable/index'
+import ConsultMore from './ConsultMore.vue'
 const props = defineProps<{
   item: ConsultOrderItem
 }>()
 const emits = defineEmits<{
   (e: 'on-delte', id: number | string): void
 }>()
-const showPopover = ref(false)
-const actions = computed(() => [
-  { text: '查看处方', disabled: !props.item.prescriptionId },
-  { text: '删除订单' }
-])
-const onSelect = (item: { text: string; disabled?: boolean }) => {
-  console.log('item=>', item)
-}
+// const showPopover = ref(false)
+// const actions = computed(() => [
+//   { text: '查看处方', disabled: !props.item.prescriptionId },
+//   { text: '删除订单' }
+// ])
+// const onSelect = (item: { text: string; disabled?: boolean }, i: number) => {
+//   console.log('item=>', item)
+//   console.log('i', i)
+//   if (i === 0) {
+//     showPrescription(props.item.prescriptionId as string)
+//   }
+//   if (i === 1) {
+//     if (props.item) {
+//       dele(props.item)
+//     }
+//   }
+// }
 //删除
-const dele = async (val: ConsultOrderItem) => {
-  try {
-    await deleteOrder(val.id)
-    emits('on-delte', val.id)
-    showToast('删除成功')
-  } catch {
-    showToast('删除失败')
-  }
-}
+// const dele = async (val: ConsultOrderItem) => {
+//   try {
+//     await deleteOrder(val.id)
+//     emits('on-delte', val.id)
+//     showToast('删除成功')
+//   } catch {
+//     showToast('删除失败')
+//   }
+// }
+const { dele } = useDeleteOrder((id) => {
+  emits('on-delte', id)
+})
 // 取消
 const cancel = async (val: ConsultOrderItem) => {
   try {
@@ -40,6 +53,7 @@ const cancel = async (val: ConsultOrderItem) => {
     showToast('取消失败')
   }
 }
+const { showPrescription } = useShowPrescription()
 </script>
 <template>
   <div class="sonsult-item">
@@ -48,7 +62,7 @@ const cancel = async (val: ConsultOrderItem) => {
       <p>{{ item.docInfo?.name || '极速问诊（自动分配医生）' }}</p>
       <span>{{ item.statusValue }}</span>
     </div>
-    <div class="box">
+    <div class="box" @click="$router.push(`/user/consult/${item.id}`)">
       <div class="row">
         <div class="row-title">病情描述</div>
         <div class="row-pic">{{ item.illnessDesc }}</div>
@@ -67,7 +81,14 @@ const cancel = async (val: ConsultOrderItem) => {
       <van-button class="gray" plain size="small" round @click="cancel(item)"
         >取消问诊</van-button
       >
-      <van-button type="primary" plain size="small" round>去支付</van-button>
+      <van-button
+        type="primary"
+        plain
+        size="small"
+        round
+        @click="$router.push(`/user/consult/${item.id}`)"
+        >去支付</van-button
+      >
     </div>
     <!-- 待接诊 -->
     <div class="bom-btn" v-if="item.status == OrderType.ConsultWait">
@@ -82,22 +103,17 @@ const cancel = async (val: ConsultOrderItem) => {
         plain
         size="small"
         round
+        @click="showPrescription(item.prescriptionId)"
         >查看处方</van-button
       >
       <van-button type="primary" plain size="small" round>继续沟通</van-button>
     </div>
     <!-- 问诊完成？ -->
     <div class="bom-btn" v-if="item.status == OrderType.ConsultComplete">
-      <div class="more">
-        <van-popover
-          placement="top-start"
-          v-model:show="showPopover"
-          :actions="actions"
-          @select="onSelect"
-        >
-          <template #reference> 更多 </template>
-        </van-popover>
-      </div>
+      <Consult-more
+        @on-delete="dele(item)"
+        @on-preview="showPrescription(item.prescriptionId!)"
+      ></Consult-more>
       <van-button
         class="gray"
         plain
@@ -177,11 +193,6 @@ const cancel = async (val: ConsultOrderItem) => {
       background: #f6f7f9;
       color: #9b9695;
       margin-right: 10px;
-    }
-    .more {
-      color: var(--cp-tag);
-      flex: 1;
-      font-size: 13px;
     }
   }
 }
