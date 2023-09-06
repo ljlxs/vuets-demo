@@ -93,7 +93,14 @@ const { showPrescription } = useShowPrescription()
     <!-- 待接诊 -->
     <div class="bom-btn" v-if="item.status == OrderType.ConsultWait">
       <van-button class="gray" plain size="small" round>取消问诊</van-button>
-      <van-button type="primary" plain size="small" round>继续沟通</van-button>
+      <van-button
+        type="primary"
+        plain
+        size="small"
+        round
+        @click="$router.push(`/room/${item.id}`)"
+        >继续沟通</van-button
+      >
     </div>
     <!-- 问诊中？ -->
     <div class="bom-btn" v-if="item.status == OrderType.ConsultChat">

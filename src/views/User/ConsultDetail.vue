@@ -44,7 +44,7 @@ const beforeClose = () => {
     })
     .catch(() => {
       orderId = ''
-      router.push('/user/consult')
+      // router.push('/user/consult')
       return true
     })
 }
@@ -204,6 +204,7 @@ const beforeClose = () => {
     <van-skeleton title :row="3" />
   </div>
   <cpPaySheet
+    payCallback="user/consult"
     v-model:show="show"
     :onClose="beforeClose"
     :orderId="orderId"

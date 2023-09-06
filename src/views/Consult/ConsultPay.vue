@@ -65,7 +65,7 @@ const beforeClose = () => {
     })
     .catch(() => {
       orderId.value = ''
-      router.push('/user/consult')
+      // router.push('/user/consult')
       return true
     })
 }
@@ -142,6 +142,7 @@ onMounted(() => {
       >
     </div>
     <cpPaySheet
+      payCallback="room"
       v-model:show="show"
       :onClose="beforeClose"
       :orderId="orderId"
