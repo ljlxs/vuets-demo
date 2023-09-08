@@ -266,3 +266,79 @@ export type ExpressInfo = {
    */
   time: string
 }
+// 物流信息返回的类型
+export type ExpressResponseType = {
+  /**
+   * 快递单号
+   */
+  awbNo: string
+  currentLocationInfo: CurrentLocationInfo
+  /**
+   * 预计送达时间
+   */
+  estimatedTime: string
+  /**
+   * 物流日志
+   */
+  list: List[]
+  /**
+   * 物流运输轨迹经纬度
+   */
+  logisticsInfo: LogisticsInfo[]
+  /**
+   * 公司名称
+   */
+  name: number
+  /**
+   * 订单派送状态1已发货 2已揽件 3 运输中 4 派送中 5已签收
+   */
+  status: string
+  /**
+   * 订单状态值
+   */
+  statusValue: string
+}
+export type CurrentLocationInfo = {
+  /**
+   * 纬度信息
+   */
+  latitude: string
+  /**
+   * 经度信息
+   */
+  longitude: string
+}
+
+export type List = {
+  /**
+   * 信息文字
+   */
+  content: string
+  /**
+   * 时间
+   */
+  createTime: string
+  /**
+   * 物流详情信息ID
+   */
+  id: string
+  /**
+   * 状态code
+   */
+  status: string
+  /**
+   * 状态值
+   */
+  statusValue: string
+}
+
+export type LogisticsInfo = {
+  /**
+   * 纬度信息
+   */
+  latitude: string
+  /**
+   * 经度信息
+   */
+  longitude: string
+}

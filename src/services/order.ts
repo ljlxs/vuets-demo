@@ -1,4 +1,5 @@
 import type {
+  ExpressResponseType,
   MedicineOrderType,
   MedicineResponseType,
   MedicineType,
@@ -28,4 +29,8 @@ export const getMedicalOrderDetail = (id: string) => {
     `/patient/medicine/order/detail/${id}`,
     'GET'
   )
+}
+//
+export const getLogisticsDetail = (id: string) => {
+  return request<ExpressResponseType>(`/patient/order/${id}/logistics`, 'GET')
 }

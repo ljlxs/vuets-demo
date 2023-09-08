@@ -16,7 +16,7 @@ MedicalOrderDetail()
 <template>
   <div class="payResult-page">
     <cp-nav-bar title="药品支付结果"></cp-nav-bar>
-    <div class="result" v-if="List?.status !== OrderType.MedicineTake">
+    <div class="result" v-if="List?.status === OrderType.MedicineTake">
       <van-icon name="clear" />
       <p class="price">￥ {{ List?.actualPayment }}</p>
       <p class="status">支付失败</p>

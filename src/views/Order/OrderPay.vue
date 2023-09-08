@@ -8,6 +8,7 @@ import type { MedicineResponseType, addressResponseType } from '@/types/order'
 import { showConfirmDialog, showToast } from 'vant'
 import { ref } from 'vue'
 import { useRoute } from 'vue-router'
+import OrderMedical from './components/OrderMedical.vue'
 const route = useRoute()
 const prescriptionId = route.query.id
 const agree = ref(false)
@@ -34,11 +35,11 @@ const submit = async () => {
   if (!agree.value) return showToast('请勾选我同意')
   if (!AdderssList.value?.id) return showToast('请选择收货地址')
   if (!MedicineInfoList.value) return showToast('未找到处方')
-  show.value = true
   const res = await createMedicalOrder({
     id: prescriptionId as string,
     addressId: AdderssList.value.id
   })
+  show.value = true
   medicalOrderId.value = res.data.id
 }
 const beforeClose = () => {
@@ -77,11 +78,12 @@ const beforeClose = () => {
     </div>
     <div class="bg"></div>
     <div class="box">
-      <div class="top">
+      <!-- <div class="top">
         <p>优医药房</p>
         <span>优医质保 假一赔十</span>
-      </div>
-      <div class="item van-hairline--top">
+      </div> -->
+      <OrderMedical :MedicineInfoList="MedicineInfoList!" />
+      <!-- <div class="item van-hairline--top">
         <div
           class="item-top"
           v-for="(item, index) in MedicineInfoList?.medicines"
@@ -107,13 +109,19 @@ const beforeClose = () => {
             用法用量: {{ item.usageDosag }}
           </div>
         </div>
-      </div>
+      </div> -->
     </div>
     <van-cell-group>
-      <van-cell title="药品金额" value="￥1106" />
-      <van-cell title="运费" value="￥0" />
-      <van-cell title="优惠卷" value="-￥0" />
-      <van-cell title="实付款" value="￥1106" />
+      <van-cell title="药品金额" :value="`￥${MedicineInfoList?.payment}`" />
+      <van-cell title="运费" :value="`￥${MedicineInfoList?.expressFee}`" />
+      <van-cell
+        title="优惠卷"
+        :value="`-￥${MedicineInfoList?.couponDeduction}`"
+      />
+      <van-cell
+        title="实付款"
+        :value="`￥${MedicineInfoList?.actualPayment}`"
+      />
     </van-cell-group>
     <div class="redd">
       由于药品的特殊性，如非错发、漏发药品的情况，药品一经发出
@@ -185,70 +193,70 @@ const beforeClose = () => {
   }
   .box {
     padding: 0 15px;
-    .top {
-      display: flex;
-      padding: 15px 0;
-      align-items: flex-end;
-      > p {
-        margin-right: 15px;
-        font-size: 17px;
-      }
-      > span {
-        font-size: 14px;
-        color: var(--cp-tag);
-      }
-    }
-    .item {
-      .item-top {
-        padding-top: 15px;
-        .item-bo {
-          display: flex;
-          flex: 1;
-          margin-left: 15px;
-          .item-box {
-            > h3 {
-              margin-bottom: 5px;
-              font-weight: normal;
-              display: flex;
-              justify-content: space-between;
-              align-items: center;
-            }
-            .item-box-cont {
-              margin-bottom: 10px;
-              display: flex;
-              > .sp {
-                margin-left: 10px;
-                font-size: 14px;
-                color: var(--cp-tag);
-              }
-            }
-          }
-          .van-tag--primary {
-            background: var(--cp-primary);
-          }
-          img {
-            width: 80px;
-            height: 70px;
-            border-radius: 2px;
-            overflow: hidden;
-          }
-          .price {
-            font-size: 16px;
-            color: #eb5757;
-          }
-        }
-      }
-      .item-bom {
-        width: 100%;
-        height: 26px;
-        border-radius: 5px;
-        background-color: var(--cp-bg);
-        color: var(--cp-tag);
-        line-height: 26px;
-        padding-left: 10px;
-        margin: 15px 0;
-      }
-    }
+    // .top {
+    //   display: flex;
+    //   padding: 15px 0;
+    //   align-items: flex-end;
+    //   > p {
+    //     margin-right: 15px;
+    //     font-size: 17px;
+    //   }
+    //   > span {
+    //     font-size: 14px;
+    //     color: var(--cp-tag);
+    //   }
+    // }
+    // .item {
+    //   .item-top {
+    //     padding-top: 15px;
+    //     .item-bo {
+    //       display: flex;
+    //       flex: 1;
+    //       margin-left: 15px;
+    //       .item-box {
+    //         > h3 {
+    //           margin-bottom: 5px;
+    //           font-weight: normal;
+    //           display: flex;
+    //           justify-content: space-between;
+    //           align-items: center;
+    //         }
+    //         .item-box-cont {
+    //           margin-bottom: 10px;
+    //           display: flex;
+    //           > .sp {
+    //             margin-left: 10px;
+    //             font-size: 14px;
+    //             color: var(--cp-tag);
+    //           }
+    //         }
+    //       }
+    //       .van-tag--primary {
+    //         background: var(--cp-primary);
+    //       }
+    //       img {
+    //         width: 80px;
+    //         height: 70px;
+    //         border-radius: 2px;
+    //         overflow: hidden;
+    //       }
+    //       .price {
+    //         font-size: 16px;
+    //         color: #eb5757;
+    //       }
+    //     }
+    //   }
+    //   .item-bom {
+    //     width: 100%;
+    //     height: 26px;
+    //     border-radius: 5px;
+    //     background-color: var(--cp-bg);
+    //     color: var(--cp-tag);
+    //     line-height: 26px;
+    //     padding-left: 10px;
+    //     margin: 15px 0;
+    //   }
+    // }
   }
   .redd {
     font-size: 12px;
