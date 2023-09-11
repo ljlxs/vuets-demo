@@ -19,6 +19,7 @@ const finished = ref(false)
 const onLoad = async () => {
   const res = await getUserInfo(infoPramas.value)
   list.value.push(...res.data.rows)
+  console.log(res.data)
   if (infoPramas.value.current >= res.data.pageTotal) {
     finished.value = true
   } else {

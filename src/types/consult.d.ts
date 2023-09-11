@@ -139,7 +139,7 @@ export type SubDep = {
   name: string
 }
 export type TopDep = SubDep & {
-  child: SubDep
+  child: SubDep[]
 }
 export type DepList = TopDep[]
 

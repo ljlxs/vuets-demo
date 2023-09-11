@@ -2,9 +2,16 @@
 import type { Message } from '@/types/room'
 import { MsgType } from '@/enum'
 import { getIllnessTimeText, getConsultFlagText } from '@/utils/filter'
+import dayjs from 'dayjs'
+import { useUserStore } from '@/stores/user'
+const store = useUserStore()
 defineProps<{
   list: Message[]
 }>()
+// 使用dayjs对时间进行处理显示
+const formatTime = (val: string) => {
+  return dayjs(val).format('HH:mm')
+}
 </script>
 <template>
   <div class="message">
@@ -54,6 +61,51 @@ defineProps<{
       <div class="msg msg-tip msg-tip-cancel" v-if="item.msgType === 33">
         <div class="content">
           <span>订单取消</span>
+        </div>
+      </div>
+      <!-- 文字发送 -->
+      <div
+        class="text-to"
+        v-if="item.msgType === 1 && item.from === store.user?.id"
+      >
+        <div class="content">
+          <div class="trime">{{ formatTime(item.createTime) }}</div>
+          <div class="txt">{{ item.msg.content }}</div>
+        </div>
+        <van-image :src="item.fromAvatar" />
+      </div>
+      <!-- // 图片 -->
+      <div
+        class="text-to"
+        v-if="item.msgType === 4 && item.from === store.user?.id"
+      >
+        <div class="content">
+          <div class="trime">{{ formatTime(item.createTime) }}</div>
+          <van-image class="img" fit="contain" :src="item.msg.picture?.url" />
+        </div>
+        <van-image :src="item.fromAvatar" />
+      </div>
+      <!-- 文字接收 -->
+      <div
+        class="text"
+        v-if="item.msgType === 1 && item.from !== store.user?.id"
+      >
+        <van-image :src="item.fromAvatar" />
+        <div class="content">
+          <div class="trime">{{ formatTime(item.createTime) }}</div>
+          <div class="txt">{{ item.msg.content }}</div>
+        </div>
+      </div>
+      <!-- // 图片接受 -->
+      <div
+        class="text"
+        v-if="item.msgType === 4 && item.from !== store.user?.id"
+      >
+        <van-image :src="item.fromAvatar" />
+
+        <div class="content">
+          <div class="trime">{{ formatTime(item.createTime) }}</div>
+          <van-image class="img" fit="contain" :src="item.msg.picture?.url" />
         </div>
       </div>
     </template>
@@ -107,6 +159,109 @@ defineProps<{
     }
     .green {
       color: var(--cp-primary);
+    }
+  }
+  .text {
+    display: flex;
+    .van-image {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      overflow: hidden;
+      margin-right: 13px;
+    }
+    .content {
+      max-width: 240px;
+      min-width: 52px;
+      .txt {
+        border-radius: 8px;
+        background-color: #fff;
+        padding: 15px;
+        position: relative;
+        &::before {
+          content: '';
+          position: absolute;
+          left: -13px;
+          top: 10px;
+          width: 13px;
+          height: 16px;
+          background: #fff;
+          border-top-left-radius: 13px 3px;
+        }
+        &::after {
+          content: '';
+          position: absolute;
+          left: -13px;
+          top: 13px;
+          width: 13px;
+          height: 13px;
+          background: var(--cp-bg);
+          border-top-right-radius: 13px 13px;
+        }
+      }
+      .img {
+        height: 160px;
+        width: 160px;
+        border-radius: 8px;
+        overflow: hidden;
+        border: 1px solid var(--cp-line);
+      }
+      .trime {
+        color: #c3c6d2;
+      }
+    }
+  }
+  .text-to {
+    display: flex;
+    justify-content: flex-end;
+    .van-image {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      overflow: hidden;
+      margin-left: 13px;
+    }
+    .content {
+      max-width: 240px;
+      min-width: 52px;
+      .txt {
+        border-radius: 8px;
+        background-color: var(--cp-primary);
+        padding: 15px;
+        color: #fff;
+        position: relative;
+        &::before {
+          content: '';
+          position: absolute;
+          right: -13px;
+          top: 10px;
+          width: 13px;
+          height: 16px;
+          background: var(--cp-primary);
+          border-top-right-radius: 13px 3px;
+        }
+        &::after {
+          content: '';
+          position: absolute;
+          right: -13px;
+          top: 13px;
+          width: 13px;
+          height: 13px;
+          background: var(--cp-bg);
+          border-top-left-radius: 13px 13px;
+        }
+      }
+      .img {
+        height: 160px;
+        width: 160px;
+        border-radius: 8px;
+        overflow: hidden;
+        border: 1px solid var(--cp-line);
+      }
+      .trime {
+        color: #c3c6d2;
+        text-align: right;
+      }
     }
   }
 }

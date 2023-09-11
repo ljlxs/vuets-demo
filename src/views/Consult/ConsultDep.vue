@@ -29,9 +29,9 @@ const childList = computed(() => {
     </div>
     <div class="right">
       <router-link
-        @click="store.setDepId(ele.id)"
         v-for="(ele, i) in childList"
         :key="i"
+        @click="store.setDepId(ele.id)"
         to="/consult/illness"
         >{{ ele.name }}</router-link
       >

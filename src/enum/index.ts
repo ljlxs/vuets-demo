@@ -61,7 +61,7 @@ export enum OrderType {
 export enum MsgType {
   // 文字聊天
   MsgText = 1,
-  // 消息聊天
+  // 图片聊天
   MsgImage = 4,
   // 患者信息
   CardPat = 21,
