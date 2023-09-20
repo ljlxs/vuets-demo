@@ -4,6 +4,9 @@ import { MsgType } from '@/enum'
 import { getIllnessTimeText, getConsultFlagText } from '@/utils/filter'
 import dayjs from 'dayjs'
 import { useUserStore } from '@/stores/user'
+import useShowPrescription from '@/composable/index'
+import { useRouter } from 'vue-router'
+const router = useRouter()
 const store = useUserStore()
 defineProps<{
   list: Message[]
@@ -11,6 +14,10 @@ defineProps<{
 // 使用dayjs对时间进行处理显示
 const formatTime = (val: string) => {
   return dayjs(val).format('HH:mm')
+}
+const { showPrescription } = useShowPrescription()
+const buy = (id: string) => {
+  router.push(`/order/pay?id=${id}`)
 }
 </script>
 <template>
@@ -106,6 +113,41 @@ const formatTime = (val: string) => {
         <div class="content">
           <div class="trime">{{ formatTime(item.createTime) }}</div>
           <van-image class="img" fit="contain" :src="item.msg.picture?.url" />
+        </div>
+      </div>
+      <div class="recipe" v-if="item.msgType === MsgType.CardPre">
+        <div class="content" v-if="item.msg.prescription">
+          <div class="head van-hairline--bottom">
+            <div class="head-tit">
+              <h3>电子处方</h3>
+              <p @click="showPrescription(item.msg.prescription?.id)">
+                原始处方 <van-icon name="arrow"></van-icon>
+              </p>
+            </div>
+            <p>
+              {{ item.msg.prescription.name }}
+              {{ item.msg.prescription.genderValue }}
+              {{ item.msg.prescription.age }}岁
+              {{ item.msg.prescription.diagnosis }}
+            </p>
+            <p>开方时间：{{ item.msg.prescription.createTime }}</p>
+          </div>
+          <div class="body">
+            <div
+              class="body-item"
+              v-for="med in item.msg.prescription.medicines"
+              :key="med.id"
+            >
+              <div class="durg">
+                <p>{{ med.name }} {{ med.specs }}</p>
+                <p>{{ med.usageDosag }}</p>
+              </div>
+              <div class="num">x{{ med.quantity }}</div>
+            </div>
+          </div>
+          <div class="foot">
+            <span @click="buy(item.msg.prescription.id)">购买药品</span>
+          </div>
         </div>
       </div>
     </template>
@@ -261,6 +303,59 @@ const formatTime = (val: string) => {
       .trime {
         color: #c3c6d2;
         text-align: right;
+      }
+    }
+  }
+  .recipe {
+    padding: 15px;
+    .content {
+      background-color: #fff;
+      border-radius: 8px;
+      color: var(--cp-tip);
+      font-size: 12px;
+      flex: 1;
+      .head {
+        padding: 15px;
+        .head-tit {
+          display: flex;
+          justify-content: space-between;
+          > h3 {
+            font-weight: normal;
+            font-size: 16px;
+            color: var(--cp-text1);
+          }
+        }
+        p {
+          margin-top: 5px;
+        }
+      }
+      .body {
+        padding: 15px 15px 0 15px;
+        &-item {
+          display: flex;
+          margin-bottom: 15px;
+          .durg {
+            flex: 1;
+            > p {
+              &:first-child {
+                font-size: 14px;
+                color: var(--cp-text1);
+                margin-bottom: 5px;
+              }
+            }
+          }
+          .num {
+            color: var(--cp-text1);
+          }
+        }
+      }
+      .foot {
+        background-color: var(--cp-plain);
+        color: var(--cp-primary);
+        font-size: 16px;
+        text-align: center;
+        height: 42px;
+        line-height: 42px;
       }
     }
   }

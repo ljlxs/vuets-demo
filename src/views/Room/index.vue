@@ -74,6 +74,7 @@ onMounted(() => {
   })
   // 接收消息
   socket.on('receiveChatMsg', async (event) => {
+    console.log('event', event)
     list.value?.push(event)
     await nextTick()
     window.scrollTo(0, document.body.scrollHeight)
